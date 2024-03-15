@@ -20,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::latest();
+        $categories = Category::latest()->first();
 
         if(!empty($request->get('keyword'))){
             $categories = $categories->where('name','like','%'.$request->get('keyword').'%');
@@ -126,6 +126,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         // dd($category->id);
         if(empty($category)){
+            $request->session()->flash('error','category not  found');
             return response()->json([
                 'status'=> false,
                 'notFound'=> true,
@@ -201,7 +202,12 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if(empty($category)){
-            return redirect()->route('categories.index');
+            // return redirect()->route('categories.index');
+            $request->session()->flash('error','Category Not Found');
+            return response()->json([
+                'status' => true,
+                'message' => 'Category Not Found'
+            ]);
         }
 
         //delete old image
@@ -210,7 +216,7 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        $request->session()->flash('Category deleted successfully');
+        $request->session()->flash('success','Category deleted successfully');
 
         return response()->json([
             'status' => true,
