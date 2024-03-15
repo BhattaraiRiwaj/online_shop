@@ -48,3 +48,25 @@
     </div>
 </section>
 @endsection
+@section('add_script')
+    <script>
+        function deleteCategory(id){
+            var url = '{{ route("categories.delete","ID") }}';
+            var newUrl = url.replace("ID",id);
+            if(confirm("Are you sure you want to delete")){
+                $.ajax({
+                   url : newUrl,
+                   type :'delete',
+                   data : {},
+                   dataType : 'json',
+                   success : function(response){
+                       if(response["status"]){
+                           window.location.href = "{{ route('categories.index') }}";
+                       }
+                   }
+               });
+            }
+        }
+
+    </script>
+@endsection
