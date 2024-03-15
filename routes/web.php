@@ -43,14 +43,17 @@ Route::group(['prefix'=>'admin'],function(){
             Route::get('index',[CategoryController::class,'index'])->name('index');
             Route::get('create',[CategoryController::class,'create'])->name('create');
             Route::post('store',[CategoryController::class,'store'])->name('store');
-            Route::get('{id}/show',[CategoryController::class,'show'])->name('show');
             Route::get('{id}/edit',[CategoryController::class,'edit'])->name('edit');
-            Route::patch('{id}/update',[CategoryController::class,'update'])->name('update');
-            Route::get('{id}/delete',[CategoryController::class,'destroy'])->name('delete');
+            Route::patch('{id}',[CategoryController::class,'update'])->name('update');
 
+            Route::delete('{id}',[CategoryController::class,'destroy'])->name('delete');
+
+            //category status
             Route::get('status/{id}',[CategoryController::class,'userStatus'])->name('status');
+
             // temp-images.create
             Route::post('temp-image/upload',[TempImagesController::class,'create'])->name('temp-images.create');
+
             //getslug
             Route::get('getSlug',function (Request $request){
                 $slug = '';
@@ -64,6 +67,7 @@ Route::group(['prefix'=>'admin'],function(){
             })->name('slug');
 
         });
-    });
 
+
+    });
 });
