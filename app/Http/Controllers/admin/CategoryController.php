@@ -7,6 +7,7 @@ use App\Models\TempImage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Redis;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,13 +50,14 @@ class CategoryController extends Controller
     {
      $validator = Validator::make($request->all(),[
         'name'=>'required',
-        'slug'=>'required|unique:categories,slug',
+        'slug'=>'required|unique',
      ]);
 
      if($validator->passes()){
         $category =new Category();
         $category->name = $request->name;
         $category->slug = $request->slug;
+        $category->status = $request->status;
         $category->save();
 
         //save image here
@@ -104,6 +106,10 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
+        if(empty($category)){
+            return redirect()->route('categories.index');
+        }
+
         return view('admin.category.edit',compact('category'));
     }
 
@@ -116,21 +122,72 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $category = Category::find($id);
+        // dd($category->id);
+        if(empty($category)){
+            return response()->json([
+                'status'=> false,
+                'notFound'=> true,
+                'message'=> 'Category Not Found',
+            ]);
+        }
 
         $validator = Validator::make($request->all(),[
-            'name'=>'required',
-            'slug'=>'required'
+            'name' => 'required',
+            'slug' => 'required|unique:categories,slug,'.$category->id.',id',
         ]);
 
-        $input = $request->all();
-
+        // dd($validator);
         if($validator->passes()){
-            $category->update($input);
-            return redirect()->route('categories.index')->with('success','Category Updated successfully.');
-        }
-        return redirect()->back()->with('error','Categories field reuired.');
+            $category->name = $request->name;
+            $category->slug = $request->slug;
+            $category->status = $request->status;
+            $category->save();
 
+            $oldImage = $category->image;
+            //save image here
+            if(!empty($request->image_id)){
+                $tempImage = TempImage::find($request->image_id);
+                $extArray = explode('.',$tempImage->name);
+                $ext = last($extArray);
+
+                $newImageName = $category->id.'-'.time(). '.' .$ext;
+
+                $sourcePath = public_path().'/temp/'.$tempImage->name;
+                $destPath = public_path().'/uploads/category/'.$newImageName;
+                File::copy($sourcePath,$destPath );
+
+                //generate image thumbnail
+                $destPath = public_path().'/uploads/category/thumb/'.$newImageName;
+                $img = Image::make($sourcePath);
+                $img->fit(450, 600, function ($constraint) {
+                    $constraint->upsize();
+                });
+                $img->save($destPath);
+
+                $category->image = $newImageName;
+                $category->save();
+
+                //delete old image
+                File::delete(public_path().'/uploads/category/thumb/'.$oldImage );
+                File::delete(public_path().'/uploads/category/'.$oldImage );
+
+            }
+
+            $request->session()->flash('success','category Updated Successfully');
+
+            return response()->json([
+                'status'=>true,
+                'message'=>"category Updated Successfully"
+            ]);
+
+         }else{
+            return response()->json([
+                'status'=>false,
+                'errors'=>$validator->errors()
+            ]);
+         }
     }
 
     /**
@@ -139,20 +196,34 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
         $category = Category::find($id);
 
+        if(empty($category)){
+            return redirect()->route('categories.index');
+        }
+
+        //delete old image
+        File::delete(public_path().'/uploads/category/thumb/'.$category->image );
+        File::delete(public_path().'/uploads/category/'.$category->image );
+
         $category->delete();
 
-        return redirect()->back()->with('success','Category deleted successfully.');
+        $request->session()->flash('Category deleted successfully');
 
+        return response()->json([
+            'status' => true,
+            'message' => 'Category deleted successfully'
+        ]);
     }
 
+
     public function userStatus($id,Request $request){
+
         $category = Category::findOrFail($id);
 
-        if($category){
+        if(!empty($category)){
             if($category->status){
                 $category->status = 0;
             }else{
