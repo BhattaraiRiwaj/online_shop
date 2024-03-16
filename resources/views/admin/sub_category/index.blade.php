@@ -52,7 +52,14 @@
 @endsection
 @section('add_script')
     <script>
-        function deleteCategory(id) {
+        $("document").ready(function() {
+            setTimeout(function() {
+                $("#message").remove();
+            }, 3000); // 5 secs
+
+        });
+
+        function deleteSubCategory(id) {
             var url = '{{ route('sub_categories.delete', 'ID') }}';
             var newUrl = url.replace("ID", id);
             if (confirm("Are you sure you want to delete")) {
@@ -72,5 +79,7 @@
                 });
             }
         }
+
+
     </script>
 @endsection

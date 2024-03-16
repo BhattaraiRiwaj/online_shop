@@ -51,6 +51,14 @@
 @endsection
 @section('add_script')
     <script>
+        $("document").ready(function() {
+            setTimeout(function() {
+                $("#message").remove();
+            }, 3000); // 3 secs
+
+        });
+
+
         function deleteCategory(id) {
             var url = '{{ route('categories.delete', 'ID') }}';
             var newUrl = url.replace("ID", id);

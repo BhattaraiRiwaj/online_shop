@@ -6,9 +6,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Contracts\Service\Attribute\Required;
 
 class SubCategoryController extends Controller
 {
@@ -82,27 +80,22 @@ class SubCategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id,Request $request)
     {
-        $categories = Category::orderBy('name','ASC')->get();
-
         $subCategories = SubCategory::find($id);
+
+        if(empty($subCategories)){
+            $request->session()->flash('error','Record not  Found');
+
+            return redirect()->route('sub_categories.index');
+        }
+
+        $categories = Category::orderBy('name','ASC')->get();
 
         return view('admin.sub_category.edit',compact('categories','subCategories'));
     }
@@ -166,17 +159,13 @@ class SubCategoryController extends Controller
         $subCategory = SubCategory::find($id);
 
         if(empty($subCategory)){
-            // return redirect()->route('categories.index');
+
             $request->session()->flash('error','Sub Category Not Found');
             return response()->json([
                 'status' => true,
                 'message' => 'Sub Category Not Found'
             ]);
         }
-
-        //delete old image
-        // File::delete(public_path().'/uploads/category/thumb/'.$subCategory->image );
-        // File::delete(public_path().'/uploads/category/'.$subCategory->image );
 
         $subCategory->delete();
 
