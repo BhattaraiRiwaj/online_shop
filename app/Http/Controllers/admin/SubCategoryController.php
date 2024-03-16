@@ -118,10 +118,18 @@ class SubCategoryController extends Controller
     {
         $subCategory = SubCategory::find($id);
 
+        if(empty($subCategory)){
+            $request->session()->flash('error','sub category not  Found');
+            return response()->json([
+                'status'=> false,
+                'notFound'=> true,
+                'message'=> 'sub category not  Found',
+            ]);
+        }
         $validotor = Validator::make($request->all(),[
             'category' => "required",
             'name' => "required",
-            'slug' => "required|unique:sub_categories,slug,'.$subCategory->id.',id",
+            'slug' => 'required|unique:sub_categories,slug,'.$subCategory->id.',id',
             'status' => "required",
         ]);
 
