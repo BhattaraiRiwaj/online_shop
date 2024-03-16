@@ -5,7 +5,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Sub Category</h1>
+                    <h1>Edit Sub Category</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('sub_categories.index') }}" class="btn btn-primary">Back</a>
@@ -84,6 +84,7 @@
                 'dataType': 'json',
                 success : function(response){
                     $("button[type=submit]").prop('disabled',false);
+
                     if(response['status'] == true){
                         window.location.href='{{ route('sub_categories.index') }}';
                         $("#name").removeClass('is-invalid').siblings('p')
@@ -96,6 +97,10 @@
                         .removeClass('invalid-feedback').html("");
 
                     }else{
+                        if(response['notFound'] == true){
+                            window.location.href='{{ route('sub_categories.index') }}';
+                        }
+
                         var errors = response['errors'];
                         if(errors['category']){
                             $("#category").addClass('is-invalid').siblings('p')
