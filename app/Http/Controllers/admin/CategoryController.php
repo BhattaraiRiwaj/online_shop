@@ -126,7 +126,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         // dd($category->id);
         if(empty($category)){
-            $request->session()->flash('error','category not  Successfully');
+            $request->session()->flash('error','category not  Found');
             return response()->json([
                 'status'=> false,
                 'notFound'=> true,

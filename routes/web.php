@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminLoginController;
+use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 
 /*
@@ -38,7 +39,7 @@ Route::group(['prefix'=>'admin'],function(){
         Route::get('/logout',[HomeController::class,'logout'])->name('admin.logout');
 
 
-        //category
+        //category Routes
         Route::prefix('category/')->name('categories.')->group(function(){
             Route::get('index',[CategoryController::class,'index'])->name('index');
             Route::get('create',[CategoryController::class,'create'])->name('create');
@@ -48,7 +49,7 @@ Route::group(['prefix'=>'admin'],function(){
 
             Route::delete('{id}',[CategoryController::class,'destroy'])->name('delete');
 
-            //category status
+            //status
             Route::get('status/{id}',[CategoryController::class,'userStatus'])->name('status');
 
             // temp-images.create
@@ -65,8 +66,20 @@ Route::group(['prefix'=>'admin'],function(){
                     ]);
                 }
             })->name('slug');
-
         });
+
+         //sub category Routes
+         Route::name('sub_categories.')->group(function(){
+            Route::get('sub_category/index',[SubCategoryController::class,'index'])->name('index');
+            Route::get('sub_category/create',[SubCategoryController::class,'create'])->name('create');
+            Route::post('sub_category/store',[SubCategoryController::class,'store'])->name('store');
+            Route::get('sub_category/{id}/edit',[SubCategoryController::class,'edit'])->name('edit');
+            Route::patch('sub_category/{id}',[SubCategoryController::class,'update'])->name('update');
+            Route::delete('sub_category/{id}',[SubCategoryController::class,'destroy'])->name('delete');
+        //status
+         Route::get('status/{id}',[SubCategoryController::class,'userStatus'])->name('status');
+
+         });
 
 
     });
