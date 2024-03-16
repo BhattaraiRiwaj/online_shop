@@ -11,19 +11,19 @@
     </thead>
     <tbody>
         @if ($subCategories->isNotEmpty())
-            @foreach ($subCategories as $sub_category)
+            @foreach ($subCategories as $subCategory)
             <tr>
-                <td>{{ $sub_category->id }}</td>
-                <td>{{ $sub_category->name }}</td>
-                <td>{{ $sub_category->slug }}</td>
-                <td>{{ $sub_category->categoryName }}</td>
+                <td>{{ $subCategory->id }}</td>
+                <td>{{ $subCategory->name }}</td>
+                <td>{{ $subCategory->slug }}</td>
+                <td>{{ $subCategory->categoryName }}</td>
                 <td>
-                    <a href="{{ route('sub_categories.status',$sub_category->id) }}" class="btn btn-sm btn-{{ $sub_category->status ? 'success' : 'danger' }}">
-                        {{ $sub_category->status ? 'Active' : 'Block' }}
+                    <a href="{{ route('subCategory.status',$subCategory->id) }}" class="btn btn-sm btn-{{ $subCategory->status ? 'success' : 'danger' }}">
+                        {{ $subCategory->status ? 'Active' : 'Block' }}
                     </a>
                 </td>
                 <td>
-                    <a href="{{ route('sub_categories.edit',$sub_category->id) }}">
+                    <a href="{{ route('sub_categories.edit',$subCategory->id) }}">
                         <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path
@@ -31,7 +31,7 @@
                             </path>
                         </svg>
                     </a>
-                    <a href="#" onclick="deleteSubCategory({{ $sub_category->id }})" class="text-danger w-4 h-4 mr-1">
+                    <a href="#" onclick="deleteSubCategory({{ $subCategory->id }})" class="text-danger w-4 h-4 mr-1">
                         <svg wire:loading.remove.delay="" wire:target=""
                             class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

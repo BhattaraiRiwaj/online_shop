@@ -177,7 +177,7 @@ class SubCategoryController extends Controller
         ]);
     }
 
-    public function userStatus($id,Request $request){
+    public function status($id,Request $request){
 
         $subCategory = SubCategory::findOrFail($id);
 

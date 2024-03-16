@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminLoginController;
+use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 
@@ -76,8 +77,33 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('sub_category/{id}/edit', [SubCategoryController::class, 'edit'])->name('edit');
             Route::patch('sub_category/{id}', [SubCategoryController::class, 'update'])->name('update');
             Route::delete('sub_category/{id}', [SubCategoryController::class, 'destroy'])->name('delete');
+        });
+        //status
+            Route::get('subCategory/status/{id}',[SubCategoryController::class,'status'])->name('subCategory.status');
+
+
+        //Brands Routes
+        Route::name('brands.')->group(function () {
+            Route::get('brands/index', [BrandController::class, 'index'])->name('index');
+            Route::get('brands/create', [BrandController::class, 'create'])->name('create');
+            Route::post('brands/store', [BrandController::class, 'store'])->name('store');
+            Route::get('brands/{id}/edit', [BrandController::class, 'edit'])->name('edit');
+            Route::patch('brands/{id}', [BrandController::class, 'update'])->name('update');
+            Route::delete('brands/{id}', [BrandController::class, 'destroy'])->name('delete');
             //status
-            Route::get('status/{id}', [SubCategoryController::class, 'userStatus'])->name('status');
+            Route::get('status/{id}', [BrandController::class, 'brandStatus'])->name('status');
+
+            //getslug
+            Route::get('getSlug', function (Request $request) {
+                $slug = '';
+                if (!empty($request->title)) {
+                    $slug = Str::slug($request->title);
+                    return response()->json([
+                        'status' => true,
+                        'slug' => $slug,
+                    ]);
+                }
+            })->name('slug');
         });
     });
 });

@@ -23,7 +23,8 @@ class CategoryController extends Controller
         $categories = Category::latest()->first();
 
         if(!empty($request->get('keyword'))){
-            $categories = $categories->where('name','like','%'.$request->get('keyword').'%');
+            $categories = $categories->where('name','like','%'.$request->get('keyword').'%')
+                                    ->orWhere('slug','like','%'.$request->get('keyword').'%');
         }
         $categories = $categories->paginate(10);
 
