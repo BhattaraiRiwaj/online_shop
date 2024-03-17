@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\SubCategory;
+use App\Models\Category;
+use App\Models\TempImage;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -17,9 +19,19 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.product.index');
+        $products = Product::with('product_images')->latest('id');
+
+        if(!empty($request->get('keyword'))){
+            $products = $products
+            ->where('products.title','like','%'.$request->get('keyword').'%')
+            ->orWhere('products.slug','like','%'.$request->get('keyword').'%')
+            ->orWhere('products.category_id','like','%'.$request->get('keyword').'%');
+        }
+
+        $products = $products->paginate(10);
+        return view('admin.product.index',compact('products'));
     }
 
     /**
@@ -72,8 +84,44 @@ class ProductController extends Controller
             $products->sub_category_id  = $request->sub_category;
             $products->brand_id  = $request->brand;
             $products->is_featured = $request->is_featured;
-
             $products->save();
+
+            //save gallary image
+            if(!empty($request->image_array)){
+                foreach($request->image_array as $temp_image_id){
+                    $temp_image_info = TempImage::find($temp_image_id);
+                    $extArray = explode('.',$temp_image_info->name);
+                    $ext = last($extArray); //like jpg,png
+
+
+                    // 1710437542.jpg
+                    $productImage = new ProductImage();
+                    $productImage->product_id = $products-> id;
+                    $productImage->image = 'NULL';
+                    $productImage->save();
+
+                    $imageName = $products->id.'-'.$productImage->id.'-'.time().'.'.$ext;
+                    echo $imageName;
+                    $productImage->image = $imageName;
+                    $productImage->save();
+
+                    //generate product thumbnail
+                    //large image
+                    $sourcePath = public_path().'temp/'.$imageName;
+                    $destPath = public_path().'/temp/products/largeImage/'.$imageName;
+                    $image = Image::make($sourcePath);
+                    $image->resize(1400, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+                    $image->save($destPath);
+
+                    //small image
+                    $destPath = public_path().'/temp/products/smallImage/'.$imageName;
+                    $image = Image::make($sourcePath);
+                    $image->resize(300,300);
+                    $image->save($destPath);
+                }
+            }
 
             $request->session()->flash('success','Product Added Successfully');
 
@@ -132,5 +180,24 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function productStatus($id,Request $request){
+
+        $product = Product::findOrFail($id);
+
+        if(!empty($product)){
+            if($product->status){
+                $product->status = 0;
+            }else{
+                $product->status = 1;
+            }
+        }
+
+        $product->save();
+
+        $request->session()->flash('success','Product Status Changed Successfully.');
+
+        return redirect()->back();
     }
 }

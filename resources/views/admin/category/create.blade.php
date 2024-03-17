@@ -131,7 +131,7 @@
                 });
             },
 
-            url : "{{ route('categories.temp-images.create') }}",
+            url : "{{ route('temp-images.create') }}",
             type: 'post',
             maxFiles : 1,
             paramName : 'image',

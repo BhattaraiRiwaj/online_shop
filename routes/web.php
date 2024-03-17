@@ -91,6 +91,9 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('product/index', [ProductController::class, 'index'])->name('index');
             Route::get('product/create', [ProductController::class, 'create'])->name('create');
             Route::post('product/store', [ProductController::class, 'store'])->name('store');
+
+            //status
+            Route::get('status/{id}', [ProductController::class, 'productStatus'])->name('status');
         });
 
         //product Sub Categbories
@@ -99,6 +102,8 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+        // temp-images.create
+        Route::post('temp-image/upload', [TempImagesController::class, 'create'])->name('temp-images.create');
 
         //getslug
         Route::get('getSlug', function (Request $request) {

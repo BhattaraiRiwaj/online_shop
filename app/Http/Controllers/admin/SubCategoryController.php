@@ -24,7 +24,7 @@ class SubCategoryController extends Controller
         if(!empty($request->get('keyword'))){
             $subCategories = $subCategories
             ->where('sub_categories.name','like','%'.$request->get('keyword').'%')
-            ->orWhere('categories.name','like','%'.$request->get('keyword').'%');;
+            ->orWhere('categories.name','like','%'.$request->get('keyword').'%');
         }
 
         $subCategories = $subCategories->paginate(10);
@@ -190,7 +190,7 @@ class SubCategoryController extends Controller
         }
         $subCategory->save();
 
-        $request->session()->flash('success','User Status Changed Successfully.');
+        $request->session()->flash('success','Sub Category Status Changed Successfully.');
 
         return redirect()->back();
     }
