@@ -49,5 +49,34 @@
     </section>
 @endsection
 @section('add_script')
-    <script></script>
+    <script>
+        $("document").ready(function() {
+            setTimeout(function() {
+                $("#message").remove();
+            }, 3000); // 3 secs
+
+        });
+
+
+        function deleteProduct(id) {
+            var url = '{{ route("products.delete", 'ID') }}';
+            var newUrl = url.replace("ID", id);
+            if (confirm("Are you sure you want to delete")) {
+                $.ajax({
+                    url: newUrl,
+                    type: 'delete',
+                    data: {},
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response["status"]) {
+                            window.location.href = "{{ route('products.index') }}";
+                        }
+                    }
+                });
+            }
+        }
+    </script>
 @endsection

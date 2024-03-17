@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use App\Http\Controllers\ProductSubCategoryController;
@@ -80,9 +81,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::patch('brands/{id}', [BrandController::class, 'update'])->name('update');
             Route::delete('brands/{id}', [BrandController::class, 'destroy'])->name('delete');
             //status
-            Route::get('status/{id}', [BrandController::class, 'brandStatus'])->name('status');
-
-
+            Route::get('brand/status/{id}', [BrandController::class, 'status'])->name('status');
         });
 
 
@@ -91,6 +90,14 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('product/index', [ProductController::class, 'index'])->name('index');
             Route::get('product/create', [ProductController::class, 'create'])->name('create');
             Route::post('product/store', [ProductController::class, 'store'])->name('store');
+            Route::get('product/{id}/edit', [ProductController::class, 'edit'])->name('edit');
+            Route::patch('product/{id}', [ProductController::class, 'update'])->name('update');
+            Route::delete('product/{id}', [ProductController::class, 'destroy'])->name('delete');
+
+            Route::post('product/image/update', [ProductImageController::class, 'update'])->name('imageUpdate');
+            Route::delete('product/image', [ProductImageController::class, 'destroy'])->name('imageDelete');
+
+
 
             //status
             Route::get('status/{id}', [ProductController::class, 'productStatus'])->name('status');
@@ -98,9 +105,6 @@ Route::group(['prefix' => 'admin'], function () {
 
         //product Sub Categbories
         Route::get('/product-subCategories', [ProductSubCategoryController::class, 'index'])->name('product-subCategories.index');
-
-
-
 
         // temp-images.create
         Route::post('temp-image/upload', [TempImagesController::class, 'create'])->name('temp-images.create');

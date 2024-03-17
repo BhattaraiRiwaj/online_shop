@@ -175,7 +175,7 @@ class BrandController extends Controller
     }
 
 
-    public function brandStatus($id,Request $request)
+    public function status($id)
     {
         $brand = Brand::findOrFail($id);
 

@@ -14,7 +14,7 @@
         </div>
     </section>
     <section class="content">
-        <form action="" method="post" name="productForm" id="productForm">
+        <form action="" method="post" name="productForm" id="productForm" enctype="multipart/form-data">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-8">
@@ -82,6 +82,7 @@
                                                 To show a reduced price, move the product’s original price into Compare at
                                                 price. Enter a lower value into Price.
                                             </p>
+                                            <p class="error"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -235,6 +236,7 @@
                     if (response['status'] == true) {
                         $(".error").removeClass('invalid-feedback').html('');
                         $("input[type='text'],select,input[type='number']").removeClass('is-invalid');
+
                         window.location.href="{{ route('products.index') }}";
                     } else {
 
@@ -295,6 +297,7 @@
                 'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
             },
             success: function(file, response) {
+                console.log(response);
                var html = `<div class = "col-md-3" id="image-row-${response.image_id}"><div class="card">
                         <input type="hidden" name="image_array[]" value="${response.image_id}">
                         <img src="${response.ImagePath}" class="card-img-top" alt="...">
