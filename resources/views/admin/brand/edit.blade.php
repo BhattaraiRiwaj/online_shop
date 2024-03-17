@@ -103,7 +103,7 @@
             element = $(this);
             $("button[type=submit]").prop('disabled',true);
             $.ajax({
-                'url':'{{ route("brands.slug") }}',
+                'url':'{{ route("slug") }}',
                 'type':'get',
                 'data': {title: element.val()},
                 'dataType': 'json',

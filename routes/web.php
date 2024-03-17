@@ -7,8 +7,10 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\BrandController;
+use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
+use App\Http\Controllers\ProductSubCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +49,6 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('store', [CategoryController::class, 'store'])->name('store');
             Route::get('{id}/edit', [CategoryController::class, 'edit'])->name('edit');
             Route::patch('{id}', [CategoryController::class, 'update'])->name('update');
-
             Route::delete('{id}', [CategoryController::class, 'destroy'])->name('delete');
 
             //status
@@ -55,18 +56,6 @@ Route::group(['prefix' => 'admin'], function () {
 
             // temp-images.create
             Route::post('temp-image/upload', [TempImagesController::class, 'create'])->name('temp-images.create');
-
-            //getslug
-            Route::get('getSlug', function (Request $request) {
-                $slug = '';
-                if (!empty($request->title)) {
-                    $slug = Str::slug($request->title);
-                    return response()->json([
-                        'status' => true,
-                        'slug' => $slug,
-                    ]);
-                }
-            })->name('slug');
         });
 
         //sub category Routes
@@ -93,17 +82,34 @@ Route::group(['prefix' => 'admin'], function () {
             //status
             Route::get('status/{id}', [BrandController::class, 'brandStatus'])->name('status');
 
-            //getslug
-            Route::get('getSlug', function (Request $request) {
-                $slug = '';
-                if (!empty($request->title)) {
-                    $slug = Str::slug($request->title);
-                    return response()->json([
-                        'status' => true,
-                        'slug' => $slug,
-                    ]);
-                }
-            })->name('slug');
+
         });
+
+
+        //product Routes
+        Route::name('products.')->group(function(){
+            Route::get('product/index', [ProductController::class, 'index'])->name('index');
+            Route::get('product/create', [ProductController::class, 'create'])->name('create');
+            Route::post('product/store', [ProductController::class, 'store'])->name('store');
+        });
+
+        //product Sub Categbories
+        Route::get('/product-subCategories', [ProductSubCategoryController::class, 'index'])->name('product-subCategories.index');
+
+
+
+
+
+        //getslug
+        Route::get('getSlug', function (Request $request) {
+            $slug = '';
+            if (!empty($request->title)) {
+                $slug = Str::slug($request->title);
+                return response()->json([
+                    'status' => true,
+                    'slug' => $slug,
+                ]);
+            }
+        })->name('slug');
     });
 });
