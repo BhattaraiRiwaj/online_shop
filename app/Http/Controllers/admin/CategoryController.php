@@ -20,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::latest()->first();
+        $categories = Category::orderBy('id','DESC')->latest('id');
 
         if(!empty($request->get('keyword'))){
             $categories = $categories->where('name','like','%'.$request->get('keyword').'%')
@@ -51,7 +51,7 @@ class CategoryController extends Controller
     {
      $validator = Validator::make($request->all(),[
         'name'=>'required',
-        'slug'=>'required|unique',
+        'slug'=>'required|unique:categories',
      ]);
 
      if($validator->passes()){
@@ -59,6 +59,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->slug = $request->slug;
         $category->status = $request->status;
+        $category->show_home = $request->show_home;
         $category->save();
 
         //save image here
@@ -145,6 +146,7 @@ class CategoryController extends Controller
             $category->name = $request->name;
             $category->slug = $request->slug;
             $category->status = $request->status;
+            $category->show_home = $request->show_home;
             $category->save();
 
             $oldImage = $category->image;
@@ -240,5 +242,22 @@ class CategoryController extends Controller
 
         $category->save();
         return redirect()->back()->with('success','User Status Changed Successfully.');
+    }
+
+
+    public function show_home($id){
+
+        $category = Category::findOrFail($id);
+
+        if(!empty($category)){
+            if($category->show_home == 'Yes'){
+                $category->show_home = 'No';
+            }else{
+                $category->show_home = 'Yes';
+            }
+        }
+
+        $category->save();
+        return redirect()->back()->with('success','Show Home Status Changed Successfully.');
     }
 }

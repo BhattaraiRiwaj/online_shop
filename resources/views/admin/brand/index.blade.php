@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-
+<title>{{ 'brand | index' }}</title>
 @section('content')
     <section class="content-header">
         <div class="container-fluid my-2">

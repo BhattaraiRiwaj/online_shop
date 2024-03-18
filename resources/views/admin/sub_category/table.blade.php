@@ -5,6 +5,7 @@
             <th>Name</th>
             <th>Slug</th>
             <th>Category</th>
+            <th width="100">Home</th>
             <th width="100">Status</th>
             <th width="100">Action</th>
         </tr>
@@ -17,6 +18,11 @@
                 <td>{{ $subCategory->name }}</td>
                 <td>{{ $subCategory->slug }}</td>
                 <td>{{ $subCategory->categoryName }}</td>
+                <td>
+                    <a href="{{ route('sub_categories.show_home',$subCategory->id) }}" class="btn btn-sm btn-{{ ($subCategory->show_home == 'Yes') ? 'success' : 'danger' }}">
+                        {{ ($subCategory->show_home == 'Yes') ? 'Active' : 'Block' }}
+                    </a>
+                </td>
                 <td>
                     <a href="{{ route('subCategory.status',$subCategory->id) }}" class="btn btn-sm btn-{{ $subCategory->status ? 'success' : 'danger' }}">
                         {{ $subCategory->status ? 'Active' : 'Block' }}

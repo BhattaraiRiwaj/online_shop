@@ -60,8 +60,8 @@
                             </div>
                         </div>
                         <div class="row" id="product-gallary">
-                            @if ($productImage->isNotEmpty())
-                                @foreach ($productImage as $image)
+                            @if ($productImages->isNotEmpty())
+                                @foreach ($productImages as $image)
                                     <div class = "col-md-3" id="image-row-{{ $image->id }}">
                                         <div class="card">
                                             <input type="hidden" name="image_array[]" value="{{ $image->id }}">
@@ -334,7 +334,6 @@
                 'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
             },
             success: function(file, response) {
-                console.log(response);
                 var html = `<div class = "col-md-3" id="image-row-${response.image_id}"><div class="card">
                         <input type="hidden" name="image_array[]" value="${response.image_id}">
                         <img src="${response.ImagePath}" class="card-img-top" alt="...">
@@ -355,18 +354,10 @@
             $("#image-row-"+id).remove();
             if (confirm("Are you sure you want to delete Image ?")) {
                 $.ajax({
-                    url: "{{ route('products.imageDelete') }}",
+                    url: "{{ route('products.image') }}",
                     type: 'delete',
-                    data: {
-                        id: id
-                    },
+                    data: {id:id},
                     success: function(response) {
-
-                        if (response.status == true) {
-                            alert(response.message);
-                        } else {
-                            alert(response.message);
-                        }
 
                     },
                     error: function(jqXHR, exception) {

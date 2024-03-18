@@ -45,7 +45,7 @@
                                 <div class="mb-3">
                                     <label for="slug">Slug</label>
                                     <input type="text" name="slug" id="slug" value="{{ $subCategories->slug }}" class="form-control"
-                                        placeholder="Slug" readonly>
+                                        placeholder="Slug">
                                         <p></p>
                                 </div>
                             </div>
@@ -57,6 +57,16 @@
                                         <option {{ ($subCategories->status == 0) ? 'selected' : '' }} value="0">Block</option>
                                     </select>
                                     <p></p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="show_home">Show Home</label>
+                                    <select name="show_home" id="show_home" class="form-control">
+                                        <option {{ ($subCategories->show_home == 'Yes') ? 'selected' : '' }} value="Yes">Yes</option>
+                                        <option {{ ($subCategories->show_home == 'No') ? 'selected' : '' }} value="No">No</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

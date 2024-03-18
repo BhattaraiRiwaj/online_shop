@@ -4,6 +4,7 @@
             <th width="60">ID</th>
             <th>Name</th>
             <th>Slug</th>
+            <th width="100">Home</th>
             <th width="100">Status</th>
             <th width="100">Action</th>
         </tr>
@@ -12,17 +13,18 @@
         @if ($categories->isNotEmpty())
         @foreach ($categories as $category)
         <tr>
-            {{-- <td>{{ $loop->iteration }}</td> --}}
             <td>{{ $category->id }}</td>
             <td>{{ $category->name }}</td>
             <td>{{ $category->slug }}</td>
             <td>
+                <a href="{{ route('categories.show_home',$category->id) }}" class="btn btn-sm btn-{{ ($category->show_home == 'Yes') ? 'success' : 'danger' }}">
+                    {{ ($category->show_home == 'Yes') ? 'Yes' : 'No' }}
+                    </a>
+            </td>
+            <td>
                 <a href="{{ route('categories.status',$category->id) }}" class="btn btn-sm btn-{{ $category->status ? 'success' : 'danger' }}">
                     {{ $category->status ? 'Active' : 'Block' }}
                     </a>
-                {{-- <svg class="text-success-500 h-6 w-6 text-success" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg> --}}
             </td>
             <td>
                 <a href="{{ route('categories.edit',$category->id) }}">

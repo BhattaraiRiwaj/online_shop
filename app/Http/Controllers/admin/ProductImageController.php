@@ -54,8 +54,6 @@ class ProductImageController extends Controller
 
     public function destroy(Request $request){
         $productImage = ProductImage::find($request->id);
-
-        // dd($productImage);
         if(empty($productImage)){
             return response()->json([
                 'status'=>false,

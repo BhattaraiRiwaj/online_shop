@@ -15,7 +15,8 @@ class Category extends Model
         'name',
         'slug',
         'image',
-        'status'
+        'status',
+        'show_home',
     ];
 
     protected $hidden = [
@@ -25,5 +26,7 @@ class Category extends Model
 
     ];
 
-
+    public function sub_category() {
+        return $this->hasMany(SubCategory::class);
+    }
 }

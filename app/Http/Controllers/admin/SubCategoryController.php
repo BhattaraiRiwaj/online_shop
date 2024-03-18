@@ -62,6 +62,7 @@ class SubCategoryController extends Controller
             $subCategory->name = $request->name;
             $subCategory->slug = $request->slug;
             $subCategory->status = $request->status;
+            $subCategory->show_home = $request->show_home;
             $subCategory->category_id = $request->category;
             $subCategory->save();
 
@@ -131,6 +132,7 @@ class SubCategoryController extends Controller
             $subCategory->name = $request->name;
             $subCategory->slug = $request->slug;
             $subCategory->status = $request->status;
+            $subCategory->show_home = $request->show_home;
             $subCategory->category_id = $request->category;
             $subCategory->save();
 
@@ -193,5 +195,22 @@ class SubCategoryController extends Controller
         $request->session()->flash('success','Sub Category Status Changed Successfully.');
 
         return redirect()->back();
+    }
+
+
+    public function show_home($id){
+
+        $category = SubCategory::findOrFail($id);
+
+        if(!empty($category)){
+            if($category->show_home == 'Yes'){
+                $category->show_home = 'No';
+            }else{
+                $category->show_home = 'Yes';
+            }
+        }
+
+        $category->save();
+        return redirect()->back()->with('success','Show Home Status Changed Successfully.');
     }
 }

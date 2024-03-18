@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ProductSubCategoryController;
 
 /*
@@ -24,9 +25,10 @@ use App\Http\Controllers\ProductSubCategoryController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/',[FrontController::class,'index'])->name('front.home');
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -54,6 +56,7 @@ Route::group(['prefix' => 'admin'], function () {
 
             //status
             Route::get('status/{id}', [CategoryController::class, 'userStatus'])->name('status');
+            Route::get('show_home/{id}', [CategoryController::class, 'show_home'])->name('show_home');
 
             // temp-images.create
             Route::post('temp-image/upload', [TempImagesController::class, 'create'])->name('temp-images.create');
@@ -67,6 +70,9 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('sub_category/{id}/edit', [SubCategoryController::class, 'edit'])->name('edit');
             Route::patch('sub_category/{id}', [SubCategoryController::class, 'update'])->name('update');
             Route::delete('sub_category/{id}', [SubCategoryController::class, 'destroy'])->name('delete');
+
+
+            Route::get('show_home/{id}', [SubCategoryController::class, 'show_home'])->name('show_home');
         });
         //status
             Route::get('subCategory/status/{id}',[SubCategoryController::class,'status'])->name('subCategory.status');
@@ -94,11 +100,10 @@ Route::group(['prefix' => 'admin'], function () {
             Route::patch('product/{id}', [ProductController::class, 'update'])->name('update');
             Route::delete('product/{id}', [ProductController::class, 'destroy'])->name('delete');
 
+            //product Image Update
+            Route::delete('product/image/delete', [ProductImageController::class, 'destroy'])->name('image');
+            //product Image Update
             Route::post('product/image/update', [ProductImageController::class, 'update'])->name('imageUpdate');
-            Route::delete('product/image', [ProductImageController::class, 'destroy'])->name('imageDelete');
-
-
-
             //status
             Route::get('status/{id}', [ProductController::class, 'productStatus'])->name('status');
         });

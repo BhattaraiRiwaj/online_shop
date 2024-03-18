@@ -155,16 +155,15 @@ class ProductController extends Controller
             return redirect()->route('products.index');
         }
 
-        //fetch product Image
-        $productImage = ProductImage::where('product_id', $products->id)->get();
-
-        // dd($productImage);
+        $productImages = ProductImage::where('product_id', $products->id)->get();
 
         $categories = Category::orderBy('name', 'ASC')->get();
+
         $subCategories = SubCategory::where('category_id', $products->category_id)->get();
+
         $brands = Brand::orderBy('name', 'ASC')->get();
 
-        return view('admin.product.edit', compact('categories', 'brands', 'products', 'subCategories', 'productImage'));
+        return view('admin.product.edit', compact('categories', 'brands', 'products', 'subCategories', 'productImages'));
     }
 
     /**
@@ -235,22 +234,20 @@ class ProductController extends Controller
     public function destroy($id, Request $request)
     {
         $product = Product::find($id);
-
         if (empty($product)) {
             $request->session()->flash('error', 'Product Not Found');
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'not_found' => true,
-                'message' => 'Product Not Found'
             ]);
         }
 
-        $productImage = ProductImage::where('product_id', $product->id)->get();
-        if (!empty($productImage)) {
-            foreach ($productImage as $image) {
+        $productImages = ProductImage::where('product_id', $product->id)->get();
+        if (!empty($productImages)) {
+            foreach ($productImages as $productImage) {
                 //delete old image
-                File::delete(public_path('/temp/products/largeImage/'.$image->image));
-                File::delete(public_path('/temp/products/smallImage/'.$image->image));
+                File::delete(public_path('/temp/products/largeImage/'.$productImage->image));
+                File::delete(public_path('/temp/products/smallImage/'.$productImage->image));
             }
             ProductImage::where('product_id', $product->id)->delete();
         }
