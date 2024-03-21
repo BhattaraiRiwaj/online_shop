@@ -79,9 +79,9 @@
     </div>
     <!--Header-->
     @include('front.layouts.header')
-     <!--End Header-->
+    <!--End Header-->
 
-     <!--Main Content-->
+    <!--Main Content-->
     <main>
         @yield('front-content')
     </main>
@@ -100,18 +100,14 @@
     <script src="{{ asset('front_asset/js/ion.rangeSlider.min.js') }}"></script>
 
     @yield('front')
-    <script  type="text/javascript">
-    $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-            $(document).ready(function(){
-                $('.summernote').summernote({
-                    height:250
-                });
-            });
+
         window.onscroll = function() {
             myFunction()
         };
@@ -125,6 +121,28 @@
             } else {
                 navbar.classList.remove("sticky");
             }
+        }
+
+        //addto cart
+        function addToCart(id) {
+            $.ajax({
+                type: "post",
+                url: "{{ route('front.addToCart') }}",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.status == true) {
+                        window.location.href = "{{ route('front.cart') }}";
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
         }
     </script>
 </body>

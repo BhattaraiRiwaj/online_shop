@@ -5,8 +5,8 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="white-text" href="#">Shop</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('front.home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{ route('front.shop') }}">Shop</a></li>
                     <li class="breadcrumb-item">Cart</li>
                 </ol>
             </div>
@@ -34,8 +34,8 @@
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center justify-content-center">
-                                                    @if (!empty($cart->options->product_images->image))
-                                                        <img src="{{ asset('temp/products/smallImage/' . $cart->options->product_images->image) }}"
+                                                    @if (!empty($cart->options->productImage->image))
+                                                        <img src="{{ asset('temp/products/smallImage/' . $cart->options->productImage->image) }}"
                                                         width="" height="">
                                                     @else
                                                         <img src="{{ asset('assets/img/default-150x150.png') }}"
@@ -85,25 +85,25 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Subtotal</div>
-                                <div>$400</div>
+                                <div>${{ Cart::subtotal() }}</div>
                             </div>
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Shipping</div>
-                                <div>$20</div>
+                                <div>$0</div>
                             </div>
                             <div class="d-flex justify-content-between summery-end">
                                 <div>Total</div>
-                                <div>$420</div>
+                                <div>${{ Cart::subtotal() }}</div>
                             </div>
                             <div class="pt-5">
                                 <a href="login.php" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                             </div>
                         </div>
                     </div>
-                    <div class="input-group apply-coupan mt-4">
+                    {{-- <div class="input-group apply-coupan mt-4">
                         <input type="text" placeholder="Coupon Code" class="form-control">
                         <button class="btn btn-dark" type="button" id="button-addon2">Apply Coupon</button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

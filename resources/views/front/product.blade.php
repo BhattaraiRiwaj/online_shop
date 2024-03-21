@@ -125,7 +125,7 @@
                                     <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
 
                                     <div class="product-action">
-                                        <a class="btn btn-dark" href="">
+                                        <a class="btn btn-dark" href="javascript:void(0)" onclick="addToCart({{ $products->id }});">
                                             <i class="fa fa-shopping-cart"></i> Add To Cart
                                         </a>
                                     </div>
@@ -149,26 +149,5 @@
     @endif
 @endsection
 @section('front')
-    <script type="text/javascript">
-        function addToCart(id) {
-            $.ajax({
-                type: "post",
-                url: "{{ route('front.addToCart') }}",
-                data: {
-                    id: id
-                },
-                dataType: "json",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if(response.status == true){
-                        window.location.href = "{{ route('front.cart') }}";
-                    }else{
-                        alert(response.message);
-                    }
-                }
-            });
-        }
-    </script>
+
 @endsection
