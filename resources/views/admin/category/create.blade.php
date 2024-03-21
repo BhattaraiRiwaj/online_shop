@@ -35,6 +35,7 @@
                                         <br>Drop Files Here/Click to upload <br><br>
                                     </div>
                                 </div>
+                                <p></p>
                             </div>
                         </div>
                         <div class="col-md-6">

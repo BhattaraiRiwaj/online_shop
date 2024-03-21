@@ -41,9 +41,25 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
+                                            <label for="short_description">Short Description</label>
+                                            <textarea name="short_description" id="short_description" cols="30" rows="10" class="summernote"
+                                                placeholder="Short Description">{{ $products->short_description }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
                                             <label for="description">Description</label>
                                             <textarea name="description" id="description" cols="30" rows="10" class="summernote"
                                                 placeholder="Description">{{ $products->description }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="description">Shipping And Returns</label>
+                                            <textarea name="shipping_returns" id="shipping_returns" cols="30" rows="10" class="summernote"
+                                                placeholder="Shipping Returns">{{ $products->shipping_returns }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -222,6 +238,22 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Related product</h2>
+                                <div class="mb-3">
+                                    <select multiple name="related_products[]" id="related_products" class="related-products w-100">
+                                        @if (!empty($relatedProducts))
+                                            @foreach ($relatedProducts as $relatedProduct)
+                                                <option value="{{ $relatedProduct->id }}" {{ ($relatedProduct->id) ? 'selected' : '' }}>{{ $relatedProduct->title }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <p class="error"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -237,6 +269,23 @@
 
 @section('add_script')
     <script>
+        //related_products
+         $('.related-products').select2({
+            ajax: {
+                url: '{{ route("products.getProducts") }}',
+                dataType: 'json',
+                tags: true,
+                multiple: true,
+                minimumInputLength: 3,
+                processResults: function(data) {
+                    return {
+                        results: data.tags
+                    };
+                }
+            }
+        });
+
+
         $("#title").change(function() {
             element = $(this);
             $("button[type=submit]").prop('disabled', true);

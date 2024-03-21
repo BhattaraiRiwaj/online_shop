@@ -74,6 +74,9 @@ class ProductController extends Controller
             $products->title = $request->title;
             $products->slug = $request->slug;
             $products->description = $request->description;
+            $products->short_description = $request->short_description;
+            $products->shipping_returns = $request->shipping_returns;
+            $products->related_products = (!empty($request->related_products)) ? implode(',',$request->related_products) : '';
             $products->price = $request->price;
             $products->compare_price = $request->compare_price;
             $products->sku = $request->sku;
@@ -155,6 +158,14 @@ class ProductController extends Controller
             return redirect()->route('products.index');
         }
 
+        //Fetch Related Products
+        $relatedProducts = [];
+        if($products->related_products != ''){
+            $productArray = explode(',',$products->related_products);
+
+           $relatedProducts =  Product::whereIn('id',$productArray)->get();
+        }
+
         $productImages = ProductImage::where('product_id', $products->id)->get();
 
         $categories = Category::orderBy('name', 'ASC')->get();
@@ -163,7 +174,7 @@ class ProductController extends Controller
 
         $brands = Brand::orderBy('name', 'ASC')->get();
 
-        return view('admin.product.edit', compact('categories', 'brands', 'products', 'subCategories', 'productImages'));
+        return view('admin.product.edit', compact('categories', 'brands', 'products', 'subCategories', 'productImages','relatedProducts'));
     }
 
     /**
@@ -195,6 +206,9 @@ class ProductController extends Controller
             $products->title = $request->title;
             $products->slug = $request->slug;
             $products->description = $request->description;
+            $products->short_description = $request->short_description;
+            $products->shipping_returns = $request->shipping_returns;
+            $products->related_products = (!empty($request->related_products)) ? implode(',',$request->related_products) : '';
             $products->price = $request->price;
             $products->compare_price = $request->compare_price;
             $products->sku = $request->sku;
@@ -279,5 +293,24 @@ class ProductController extends Controller
         $request->session()->flash('success', 'Product Status Changed Successfully.');
 
         return redirect()->back();
+    }
+
+    public function getProducts(Request $request){
+
+        $tempProduct = [];
+        if($request->term != ''){
+            $products = Product::where('title','like','%'.$request->term.'%')->get();
+            if($products != null){
+                foreach($products as $product){
+                    $tempProduct[] = array('id'=>$product->id,'text'=>$product->title);
+                }
+            }
+        }
+
+        return response()->json([
+            'tags'=> $tempProduct,
+            'status'=>true
+        ]);
+
     }
 }

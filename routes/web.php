@@ -13,6 +13,7 @@ use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ProductSubCategoryController;
+use App\Http\Controllers\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ use App\Http\Controllers\ProductSubCategoryController;
 //     return view('welcome');
 // });
 Route::get('/',[FrontController::class,'index'])->name('front.home');
+Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[ShopController::class,'index'])->name('front.shop');
+Route::get('/product/{slug}',[ShopController::class,'product'])->name('front.product');
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -99,6 +102,9 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('product/{id}/edit', [ProductController::class, 'edit'])->name('edit');
             Route::patch('product/{id}', [ProductController::class, 'update'])->name('update');
             Route::delete('product/{id}', [ProductController::class, 'destroy'])->name('delete');
+
+            //getProducts
+            Route::get('get/products', [ProductController::class, 'getProducts'])->name('getProducts');
 
             //product Image Update
             Route::delete('product/image/delete', [ProductImageController::class, 'destroy'])->name('image');

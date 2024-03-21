@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/min/dropzone.min.css') }}">
 
         <link rel="stylesheet" href="{{ asset('assets/plugins/summernote/summernote.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
 
 		<!-- Theme style -->
 		<link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
@@ -99,6 +100,7 @@
 		<script src="{{ asset('assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
         <!-- Summernote -->
         <script src="{{ asset('assets/plugins/summernote/summernote.min.js') }}"></script>
+        <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 		<!-- AdminLTE App -->
 		<script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
 		<!-- AdminLTE for demo purposes -->
