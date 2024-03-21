@@ -31,6 +31,7 @@
     <meta name="twitter:image" content="" />
     <meta name="twitter:image:alt" content="" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <link rel="stylesheet" type="text/css" href="{{ asset('front_asset/css/slick.css') }}" />
@@ -99,8 +100,18 @@
     <script src="{{ asset('front_asset/js/ion.rangeSlider.min.js') }}"></script>
 
     @yield('front')
+    <script  type="text/javascript">
+    $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
-    <script>
+            $(document).ready(function(){
+                $('.summernote').summernote({
+                    height:250
+                });
+            });
         window.onscroll = function() {
             myFunction()
         };

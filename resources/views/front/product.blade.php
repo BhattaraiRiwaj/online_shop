@@ -56,7 +56,8 @@
                         <h2 class="price ">${{ $products->price }}</h2>
 
                         {!! $products->short_description !!}
-                        <a href="cart.php" class="btn btn-dark"><i class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a>
+                        <a href="javascript:void(0)" onclick="addToCart({{ $products->id }});" class="btn btn-dark"><i
+                                class="fas fa-shopping-cart"></i> &nbsp;ADD TO CART</a>
                     </div>
                 </div>
 
@@ -98,33 +99,33 @@
         </div>
     </section>
 
-    <section class="pt-5 section-8">
-        <div class="container">
-            <div class="section-title">
-                <h2>Related Products</h2>
-            </div>
-            <div class="col-md-12">
-                <div id="related-products" class="carousel">
-
-                    @if (!empty($relatedProducts))
+    @if (!empty($relatedProducts))
+        <section class="pt-5 section-8">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Related Products</h2>
+                </div>
+                <div class="col-md-12">
+                    <div id="related-products" class="carousel">
                         @foreach ($relatedProducts as $relatedProduct)
+                            @php
+                                $productImage = $relatedProduct->product_images->first();
+                            @endphp
                             <div class="card product-card">
                                 <div class="product-image position-relative">
                                     <a href="#" class="product-img">
-                                        @if (!empty($relatedProduct->product_images))
-                                            @foreach ($relatedProduct->product_images as $productImage)
-                                                <img class="card-img-top"
-                                                    src="{{ asset('temp/products/smallImage/' . $productImage->image) }}"
-                                                    alt="">
-                                            @endforeach
+                                        @if (!empty($productImage->image))
+                                            <img src="{{ asset('temp/products/smallImage/' . $productImage->image) }}"
+                                                class="card-img-top">
                                         @else
-                                            <img src="{{ asset('assets/img/default-150x150.png') }}" alt="">
+                                            <img src="{{ asset('assets/img/default-150x150.png') }}"
+                                                class="card-img-top">
                                         @endif
                                     </a>
                                     <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
 
                                     <div class="product-action">
-                                        <a class="btn btn-dark" href="#">
+                                        <a class="btn btn-dark" href="">
                                             <i class="fa fa-shopping-cart"></i> Add To Cart
                                         </a>
                                     </div>
@@ -141,13 +142,33 @@
                                 </div>
                             </div>
                         @endforeach
-                    @endif
-
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 @endsection
-
 @section('front')
+    <script type="text/javascript">
+        function addToCart(id) {
+            $.ajax({
+                type: "post",
+                url: "{{ route('front.addToCart') }}",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if(response.status == true){
+                        window.location.href = "{{ route('front.cart') }}";
+                    }else{
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+    </script>
 @endsection
