@@ -42,18 +42,10 @@
                 </ul>
             </div>
             <div class="right-nav py-0">
-                <a href="cart.php" class="ml-3 d-flex pt-2">
+                <a href="{{ route('front.cart') }}" class="ml-3 d-flex pt-2">
                     <i class="fas fa-shopping-cart text-primary"></i>
                 </a>
             </div>
         </nav>
     </div>
 </header>
-{{-- @if ($products->product_images)
-                                @foreach ($products->product_images as $key => $image)
-                                    <div class="carousel-item" {{ ($key == 0) ? 'active' : '' }}>
-                                        <img class="w-100 h-100"
-                                            src="{{ asset('temp/products/largeImage/' . $image->image) }}" alt="Image">
-                                    </div>
-                                @endforeach
-                            @endif --}}

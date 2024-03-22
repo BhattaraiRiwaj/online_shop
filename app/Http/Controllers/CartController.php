@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
@@ -41,7 +44,8 @@ class CartController extends Controller
                 );
 
                 $status = true;
-                $message = $products->title . " Added In cart";
+                $message = '<strong>'.$products->title.'</strong> Added In Your Cart Successfully';
+                $request->session()->flash('success',$message);
             } else {
                 $status = false;
                 $message = $products->title . " Is Already Added In cart";
@@ -58,7 +62,8 @@ class CartController extends Controller
             );
 
             $status = true;
-            $message = $products->title . " Added In cart";
+            $message = '<strong>'.$products->title.'</strong> Added In Your Cart Successfully';
+            $request->session()->flash('success',$message);
         }
         return response()->json([
             'status' => $status,
@@ -72,5 +77,83 @@ class CartController extends Controller
         $carts = Cart::content();
         // dd($carts);
         return view('front.cart',compact('carts'));
+    }
+
+
+    public function updateCart(Request $request){
+
+        $rowId = $request->rowId;
+        $qty = $request->qty;
+
+        $itemInfo = Cart::get($rowId);
+
+        $product = Product::find($itemInfo->id);
+        // dd($product);
+        //check qty available in stock
+        if($product->track_qty == "Yes"){
+            if($qty <= $product->qty){
+                Cart::update($rowId, $qty);
+                $status = true;
+                $message = "cart updated successfully";
+                $request->session()->flash('success',$message);
+            }else{
+                $status = false;
+                $message ="Requested qty('$qty') is not available in stock.";
+                $request->session()->flash('error',$message);
+            }
+
+        }else{
+            Cart::update($rowId, $qty);
+            $status = true;
+            $message ="cart updated successfully";
+            $request->session()->flash('success',$message);
+        }
+
+
+        return response()->json([
+            'status'=> $status,
+            'message'=>$message
+        ]);
+    }
+
+    public function deleteItem(Request $request){
+
+        $itemInfo = Cart::get($request->rowId);
+        if($itemInfo == null){
+            $errorMessage = 'Item Not found in Cart';
+            $request->session()->flash('error',$errorMessage);
+            return response()->json([
+                'status'=> false,
+                'message'=> $errorMessage
+            ]);
+        }
+
+        Cart::remove($request->rowId);
+        $message = 'Item Removed from cart Successfully';
+        $request->session()->flash('success',$message);
+        return response()->json([
+            'status'=> true,
+            'message'=> $message
+        ]);
+
+    }
+
+    public function checkout(){
+        //if cart is empty redirect to cart page
+        if(Cart::count() == 0){
+            return redirect()->route('front.cart');
+        }
+
+        //if user is not loged in redirect to login  page
+        if(Auth::check()== false){
+            if(!session()->has('url.intended')){
+                session(['url.intended'=>url()->current()]);
+            }
+            return redirect()->route('account.login');
+        }
+
+        $countries = Country::orderBy('name','ASC')->get();
+        session()->forget('url.intended');
+        return view('front.checkout',compact('countries'));
     }
 }
