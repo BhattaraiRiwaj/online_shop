@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\BrandController;
+use App\Http\Controllers\admin\DiscountCodeController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\admin\ShippingController;
@@ -139,7 +140,7 @@ Route::group(['prefix' => 'admin'], function () {
             //product Image Update
             Route::post('product/image/update', [ProductImageController::class, 'update'])->name('imageUpdate');
             //status
-            Route::get('status/{id}', [ProductController::class, 'productStatus'])->name('status');
+            Route::get('/product-status/{id}', [ProductController::class, 'productStatus'])->name('status');
         });
 
         //shipping Route
@@ -148,6 +149,18 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/shipping/{id}',[ShippingController::class,'edit'])->name('shipping.edit');
         Route::patch('/shipping/update/{id}',[ShippingController::class,'update'])->name('shipping.update');
         Route::delete('/shipping/delete/{id}',[ShippingController::class,'destroy'])->name('shipping.delete');
+
+        //Discount Routes
+        Route::name('discounts.')->group(function(){
+            Route::get('discounts/index', [DiscountCodeController::class, 'index'])->name('index');
+            Route::get('discounts/create', [DiscountCodeController::class, 'create'])->name('create');
+            Route::post('discounts/store', [DiscountCodeController::class, 'store'])->name('store');
+            Route::get('discounts/{id}/edit', [DiscountCodeController::class, 'edit'])->name('edit');
+            Route::patch('discounts/{id}', [DiscountCodeController::class, 'update'])->name('update');
+            Route::delete('discounts/{id}', [DiscountCodeController::class, 'destroy'])->name('delete');
+            //status
+            Route::get('status/{id}', [DiscountCodeController::class, 'discountStatus'])->name('status');
+        });
 
         //product Sub Categbories
         Route::get('/product-subCategories', [ProductSubCategoryController::class, 'index'])->name('product-subCategories.index');

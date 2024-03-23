@@ -16,6 +16,7 @@
 
 		<!-- Theme style -->
 		<link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/css/datetimepicker.css') }}">
 		<link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 	</head>
@@ -103,6 +104,7 @@
         <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 		<!-- AdminLTE App -->
 		<script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
+		<script src="{{ asset('assets/js/datetimepicker.js') }}"></script>
 		<!-- AdminLTE for demo purposes -->
 		<script src="{{ asset('assets/js/demo.js') }}"></script>
         <script type="text/javascript">
@@ -117,6 +119,13 @@
                     height:250
                 });
             });
+
+            $(document).ready(function(){
+            $('#demo').datetimepicker({
+                // options here
+                format:'Y-m-d H:i:s',
+            });
+        });
         </script>
         @yield('add_script')
 	</body>
