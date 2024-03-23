@@ -14,171 +14,183 @@
 
     <section class="section-9 pt-4">
         <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="sub-title">
-                        <h2>Shipping Address</h2>
+            <form action="" method="post" name="orderForm" id="orderForm" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="sub-title">
+                            <h2>Shipping Address</h2>
+                        </div>
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body checkout-form">
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <input type="text" name="first_name" id="first_name" class="form-control"
+                                                placeholder="First Name" value="{{ (!empty($customerAdderss->first_name)) ? $customerAdderss->first_name : '' }}">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <input type="text" name="last_name" id="last_name" class="form-control"
+                                                placeholder="Last Name" value="{{ (!empty($customerAdderss->last_name))  ? $customerAdderss->first_name : '' }}">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <input type="text" name="email" id="email" class="form-control"
+                                                placeholder="Email" value="{{ (!empty($customerAdderss->email))  ? $customerAdderss->email : '' }}">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <select name="country" id="country" class="form-control">
+                                                <option value="">Select a Country</option>
+                                                @if ($countries->isNotEmpty())
+                                                    @foreach ($countries as $country)
+                                                        <option {{ (!empty($customerAdderss) && $customerAdderss->country_id ==  $country->id )  ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <textarea name="address" value="" id="address" cols="30" rows="3" placeholder="Address" class="form-control">{{ (!empty($customerAdderss->address))  ? $customerAdderss->address : '' }}</textarea>
+                                            <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <input type="text" name="appartment" id="appartment" value="{{ (!empty($customerAdderss->appartment))  ? $customerAdderss->appartment : '' }}" class="form-control"
+                                                placeholder="Apartment, suite, unit, etc. (optional)">
+                                            <p></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <input type="text" name="city" value="{{ (!empty($customerAdderss->city))  ? $customerAdderss->city : '' }}" id="city" class="form-control"
+                                                placeholder="City">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <input type="text" name="state" id="state" class="form-control"
+                                                placeholder="State" value="{{ (!empty($customerAdderss->state))  ? $customerAdderss->state : '' }}">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <input type="text" name="zip" id="zip" class="form-control"
+                                                placeholder="Zip" value="{{ (!empty($customerAdderss->zip))  ? $customerAdderss->zip : '' }}">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <input type="text" name="mobile" id="mobile" class="form-control"
+                                                placeholder="Mobile No." value="{{ (!empty($customerAdderss->mobile))  ? $customerAdderss->mobile : '' }}">
+                                                <p class="error"></p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <textarea name="order_notes" id="order_notes" cols="30" rows="2" placeholder="Order Notes (optional)"
+                                                class="form-control">{{ (!empty($customerAdderss->order_notes))  ? $customerAdderss->order_notes : '' }}</textarea>
+                                            <p></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card shadow-lg border-0">
-                        <div class="card-body checkout-form">
-                            <div class="row">
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <input type="text" name="first_name" id="first_name" class="form-control"
-                                            placeholder="First Name">
+                    <div class="col-md-4">
+                        <div class="sub-title">
+                            <h2>Order Summery</h3>
+                        </div>
+                        <div class="card cart-summery">
+                            <div class="card-body">
+                                @foreach (Cart::content() as $item)
+                                    <div class="d-flex justify-content-between pb-2">
+                                        <div class="h6">{{ $item->name }} X {{ $item->qty }}</div>
+                                        <div class="h6">${{ $item->price * $item->qty }}</div>
                                     </div>
+                                @endforeach
+
+                                <div class="d-flex justify-content-between summery-end">
+                                    <div class="h6"><strong>Subtotal</strong></div>
+                                    <div class="h6"><strong>${{ Cart::subtotal() }}</strong></div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <input type="text" name="last_name" id="last_name" class="form-control"
-                                            placeholder="Last Name">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <div class="h6"><strong>Shipping</strong></div>
+                                    {{-- {{ number_format($totalShippingCharge) }} --}}
+                                    <div class="h6"><strong id="shippingCharge">${{ number_format($totalShippingCharge,2) }}</strong></div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2 summery-end">
+                                    <div class="h5"><strong>Total</strong></div>
+                                    <div class="h5"><strong id="grandTotal">${{  number_format($grandTotal,2) }}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card payment-form ">
+                            <h3 class="card-title h5 mb-3">Select a Payment Method</h3>
+
+                            <div class="">
+                                <input type="radio" name="payment_method" id="payment_method_1" value="cod"
+                                    checked>
+                                <label for="payment_method_1"> COD</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" name="payment_method" id="payment_method_2" value="stripe">
+                                <label for="payment_method_2"> STRIPE</label>
+                            </div>
+                            <div class="card-body p-0 d-none mt-3" id="card-payment-form">
+                                <div class="mb-3">
+                                    <label for="card_number" class="mb-2">Card Number</label>
+                                    <input type="text" name="card_number" id="card_number"
+                                        placeholder="Valid Card Number" class="form-control">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="expiry_date" class="mb-2">Expiry Date</label>
+                                        <input type="text" name="expiry_date" id="expiry_date" placeholder="MM/YYYY"
+                                            class="form-control">
                                     </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <input type="text" name="email" id="email" class="form-control"
-                                            placeholder="Email">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <select name="country" id="country" class="form-control">
-                                            <option value="">Select a Country</option>
-                                            @if ($countries->isNotEmpty())
-                                                @foreach ($countries as $country)
-                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <input type="text" name="appartment" id="appartment" class="form-control"
-                                            placeholder="Apartment, suite, unit, etc. (optional)">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <input type="text" name="city" id="city" class="form-control"
-                                            placeholder="City">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <input type="text" name="state" id="state" class="form-control"
-                                            placeholder="State">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <input type="text" name="zip" id="zip" class="form-control"
-                                            placeholder="Zip">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <input type="text" name="mobile" id="mobile" class="form-control"
-                                            placeholder="Mobile No.">
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <textarea name="order_notes" id="order_notes" cols="30" rows="2" placeholder="Order Notes (optional)"
-                                            class="form-control"></textarea>
+                                    <div class="col-md-6">
+                                        <label for="expiry_date" class="mb-2">CVV Code</label>
+                                        <input type="text" name="expiry_date" id="expiry_date" placeholder="123"
+                                            class="form-control">
                                     </div>
                                 </div>
 
                             </div>
+                            <div class="pt-4">
+                                {{-- <a href="#" class="btn-dark btn btn-block w-100">Pay Now</a> --}}
+                                <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
+                            </div>
                         </div>
+                        <!-- CREDIT CARD FORM ENDS HERE -->
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="sub-title">
-                        <h2>Order Summery</h3>
-                    </div>
-                    <div class="card cart-summery">
-                        <div class="card-body">
-                            @foreach (Cart::content() as $item)
-                                <div class="d-flex justify-content-between pb-2">
-                                    <div class="h6">{{ $item->name }} X {{ $item->qty }}</div>
-                                    <div class="h6">${{ $item->price * $item->qty }}</div>
-                                </div>
-                            @endforeach
-
-                            <div class="d-flex justify-content-between summery-end">
-                                <div class="h6"><strong>Subtotal</strong></div>
-                                <div class="h6"><strong>${{ Cart::subtotal() }}</strong></div>
-                            </div>
-                            <div class="d-flex justify-content-between mt-2">
-                                <div class="h6"><strong>Shipping</strong></div>
-                                <div class="h6"><strong>$0</strong></div>
-                            </div>
-                            <div class="d-flex justify-content-between mt-2 summery-end">
-                                <div class="h5"><strong>Total</strong></div>
-                                <div class="h5"><strong>${{ Cart::subtotal() }}</strong></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card payment-form ">
-                        <h3 class="card-title h5 mb-3">Select a Payment Method</h3>
-
-                        <div class="">
-                            <input type="radio" name="payment_method" id="payment_method_1" value="cod" checked>
-                            <label for="payment_method_1"> COD</label>
-                        </div>
-                        <div class="">
-                            <input type="radio" name="payment_method" id="payment_method_2" value="stripe">
-                            <label for="payment_method_2"> STRIPE</label>
-                        </div>
-                        <div class="card-body p-0 d-none mt-3" id="card-payment-form">
-                            <div class="mb-3">
-                                <label for="card_number" class="mb-2">Card Number</label>
-                                <input type="text" name="card_number" id="card_number"
-                                    placeholder="Valid Card Number" class="form-control">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="expiry_date" class="mb-2">Expiry Date</label>
-                                    <input type="text" name="expiry_date" id="expiry_date" placeholder="MM/YYYY"
-                                        class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="expiry_date" class="mb-2">CVV Code</label>
-                                    <input type="text" name="expiry_date" id="expiry_date" placeholder="123"
-                                        class="form-control">
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="pt-4">
-                            <a href="#" class="btn-dark btn btn-block w-100">Pay Now</a>
-                        </div>
-
-                    </div>
-
-
-                    <!-- CREDIT CARD FORM ENDS HERE -->
-
-                </div>
-            </div>
+            </form>
         </div>
     </section>
 @endsection
@@ -194,6 +206,60 @@
             if ($(this).is(":checked") == true) {
                 $("#card-payment-form").removeClass('d-none');
             }
+        });
+
+        $("#orderForm").submit(function(e) {
+            e.preventDefault();
+            $("button[type=submit]").prop('disabled', true);
+            $.ajax({
+                url: "{{ route('front.process.checkout') }}",
+                type: "post",
+                data: $(this).serializeArray(),
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    $("button[type=submit]").prop('disabled', false);
+                    if (response['status'] == true) {
+                        window.location.href = "{{ url('/thanks/') }}/"+response['orderId'];
+                        $(".error").removeClass('invalid-feedback').html('');
+                        $("input[type='text'],select,textarea,input[type='number']").removeClass('is-invalid');
+                    } else {
+                        var errors = response['error'];
+                        $(".error").removeClass('invalid-feedback').html('');
+                        $("input[type='text'],select,textarea,input[type='number']").removeClass('is-invalid');
+                        $.each(errors, function(key, value) {
+                            $(`#${key}`)
+                                .addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('invalid-feedback')
+                                .html(value);
+                        });
+                    }
+
+                },
+                error: function(jqXHR, exception) {
+                    console.log("something went wrong");
+                }
+            });
+        });
+
+        $("#country").change(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('front.getOrderSummary') }}",
+                type: "post",
+                data: {country_id:$(this).val()},
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == true){
+                        $('#shippingCharge').html('$'+response.shippingCharge);
+                        $('#grandTotal').html('$'+response.grandTotal);
+                    }
+                },error:function(jqXHR,exception){
+                    console.log('Something went wrong');
+                }
+            });
+
         });
     </script>
 @endsection

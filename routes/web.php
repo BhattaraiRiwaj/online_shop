@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
+use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use App\Http\Controllers\AuthController;
@@ -39,6 +40,9 @@ Route::post('/add-To-Cart',[CartController::class,'addToCart'])->name('front.add
 Route::post('/update-Cart',[CartController::class,'updateCart'])->name('front.updateCart');
 Route::post('/delete-item',[CartController::class,'deleteItem'])->name('front.deleteItem.cart');
 Route::get('/checkout',[CartController::class,'checkout'])->name('front.checkout');
+Route::post('/process-checkout',[CartController::class,'processCheckout'])->name('front.process.checkout');
+Route::get('/thanks/{order_id}',[CartController::class,'thanks'])->name('front.thankYou');
+Route::post('/get-order-summery',[CartController::class,'getOrderSummary'])->name('front.getOrderSummary');
 
 
 //Auth Route
@@ -137,6 +141,13 @@ Route::group(['prefix' => 'admin'], function () {
             //status
             Route::get('status/{id}', [ProductController::class, 'productStatus'])->name('status');
         });
+
+        //shipping Route
+        Route::get('/shipping/create',[ShippingController::class,'create'])->name('shipping.create');
+        Route::post('/shipping/store',[ShippingController::class,'store'])->name('shipping.store');
+        Route::get('/shipping/{id}',[ShippingController::class,'edit'])->name('shipping.edit');
+        Route::patch('/shipping/update/{id}',[ShippingController::class,'update'])->name('shipping.update');
+        Route::delete('/shipping/delete/{id}',[ShippingController::class,'destroy'])->name('shipping.delete');
 
         //product Sub Categbories
         Route::get('/product-subCategories', [ProductSubCategoryController::class, 'index'])->name('product-subCategories.index');
