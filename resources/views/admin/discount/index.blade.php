@@ -50,7 +50,7 @@
     </section>
 @endsection
 @section('add_script')
-    <script>
+    <script type="text/javascript">
         $("document").ready(function() {
             setTimeout(function() {
                 $("#message").remove();
@@ -62,11 +62,12 @@
         function deleteDiscount(id) {
             var url = "{{ route('discounts.delete', 'ID') }}";
             var newUrl = url.replace("ID", id);
+
             if (confirm("Are you sure you want to delete")) {
                 $.ajax({
                     url: newUrl,
                     type: 'delete',
-                    data: {id:id},
+                    data: {},
                     dataType: 'json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token"]').attr('content')
@@ -75,6 +76,8 @@
                         if (response["status"]) {
                             window.location.href = "{{ route('discounts.index') }}";
                         }
+                    },error:function(jqXHR,exception){
+                        console.log("something went wrong");
                     }
                 });
             }

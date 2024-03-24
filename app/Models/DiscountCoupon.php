@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class DiscountCoupon extends Model
 {
     use HasFactory;
+
+    protected $table = 'discount_coupons';
 }

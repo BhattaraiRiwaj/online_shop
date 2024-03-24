@@ -208,7 +208,7 @@ class CategoryController extends Controller
             // return redirect()->route('categories.index');
             $request->session()->flash('error','Category Not Found');
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'message' => 'Category Not Found'
             ]);
         }

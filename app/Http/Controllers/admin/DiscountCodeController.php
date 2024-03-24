@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\DiscountCoupon;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class DiscountCodeController extends Controller
 {
-
     public function index(Request $request)
     {
         $discounts = DiscountCoupon::orderBy('id','ASC');
@@ -125,18 +125,7 @@ class DiscountCodeController extends Controller
         ]);
 
         if($validator->passes()){
-            //starting date must be greater than current date
-            if($request->start_at != null){
-                $now = Carbon::now();
-                $startAt = Carbon::createFromFormat('Y-m-d H:i:s',$request->start_at);
 
-                if($startAt->lte($now)==true){
-                    return response()->json([
-                        'status'=>false,
-                        'errors'=> ['start_at'=>'starting date cannot  be less then current date time']
-                    ]);
-                }
-            }
             //expired date must be greater than start date
             if($request->start_at != null && $request->expires_at != null ){
                 $startAt = Carbon::createFromFormat('Y-m-d H:i:s',$request->start_at);
@@ -180,11 +169,11 @@ class DiscountCodeController extends Controller
     public function destroy($id,Request $request)
     {
         $discounts = DiscountCoupon::findOrFail($id);
+
         if($discounts == null){
-            $request->session()->flash('error','Discount coupon not found');
+            Session()->flash('error','Discount coupon not found');
             return response()->json([
-                'status'=>false,
-                'message'=>'Discount coupon not found'
+                'status'=>true,
             ]);
         }
         $discounts->delete();
@@ -192,7 +181,6 @@ class DiscountCodeController extends Controller
         $request->session()->flash('success','Discount Deleted Successfully');
         return response()->json([
             'status'=>true,
-            'message'=>'Discount Deleted Successfully'
         ]);
     }
 

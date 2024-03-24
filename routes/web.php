@@ -30,9 +30,7 @@ use App\Http\Controllers\ShopController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+
 Route::get('/',[FrontController::class,'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}',[ShopController::class,'index'])->name('front.shop');
 Route::get('/product/{slug}',[ShopController::class,'product'])->name('front.product');
@@ -152,12 +150,12 @@ Route::group(['prefix' => 'admin'], function () {
 
         //Discount Routes
         Route::name('discounts.')->group(function(){
-            Route::get('discounts/index', [DiscountCodeController::class, 'index'])->name('index');
-            Route::get('discounts/create', [DiscountCodeController::class, 'create'])->name('create');
-            Route::post('discounts/store', [DiscountCodeController::class, 'store'])->name('store');
-            Route::get('discounts/{id}/edit', [DiscountCodeController::class, 'edit'])->name('edit');
-            Route::patch('discounts/{id}', [DiscountCodeController::class, 'update'])->name('update');
-            Route::delete('discounts/{id}', [DiscountCodeController::class, 'destroy'])->name('delete');
+            Route::get('coupons/index', [DiscountCodeController::class, 'index'])->name('index');
+            Route::get('coupons/create', [DiscountCodeController::class, 'create'])->name('create');
+            Route::post('coupons/store', [DiscountCodeController::class, 'store'])->name('store');
+            Route::get('coupons/{id}/edit', [DiscountCodeController::class, 'edit'])->name('edit');
+            Route::patch('coupons/{id}', [DiscountCodeController::class, 'update'])->name('update');
+            Route::delete('coupons/{id}', [DiscountCodeController::class, 'destroy'])->name('delete');
             //status
             Route::get('status/{id}', [DiscountCodeController::class, 'discountStatus'])->name('status');
         });
